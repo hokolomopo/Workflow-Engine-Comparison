@@ -1,12 +1,7 @@
-server:
-  port: 8080
-
-camel:
-  springboot:
-    # The Camel context name
-      name: ServicesRest
-
-# The application configuration properties
-quickstart:
-  generateOrderPeriod: 10s
-  processOrderPeriod: 30s
+camunda.bpm:
+  admin-user:
+    id: admin
+    password: admin
+    firstName: admin
+  filter:
+    create: All tasks
