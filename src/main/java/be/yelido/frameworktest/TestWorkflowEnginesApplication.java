@@ -16,15 +16,6 @@ public class TestWorkflowEnginesApplication {
 	public static void main(String[] args) {
 		// Launch the application
 		ConfigurableApplicationContext context = SpringApplication.run(TestWorkflowEnginesApplication.class, args);
-
-		JmsTestRouter ms = context.getBean(JmsTestRouter.class);
-
-		JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
-
-		// Send a message with a POJO - the template reuse the message converter
-		System.out.println("Sending an email message.");
-        jmsTemplate.convertAndSend("shop.queue.vip", new Order("Jean", "private", "book", 10));
-
 	}
 
 }
