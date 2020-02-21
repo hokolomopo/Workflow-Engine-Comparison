@@ -36,6 +36,6 @@ public class VIPShop {
 
     private void sendOrderToPay(Order order){
         jmsTemplate.convertAndSend(outputQueue,
-                new BillingInfo(order.getClientName(), order.getProduct(), order.getAmount(), order.getPrice()));
+                new BillingInfo(order.getClientName(), order.getPrice()));
     }
 }
