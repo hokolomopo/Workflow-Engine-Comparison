@@ -1,62 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_09emroo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_09emroo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
   <bpmn:process id="SimpleShopTest" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_0ln89t5</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0zfb5wv</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0ln89t5" sourceRef="StartEvent_1" targetRef="Task_178vbk7" />
-    <bpmn:sequenceFlow id="SequenceFlow_193lta7" sourceRef="Task_178vbk7" targetRef="PaymentService" />
-    <bpmn:serviceTask id="Task_178vbk7" name="VIP shop" camunda:type="external" camunda:topic="VipShop">
-      <bpmn:incoming>SequenceFlow_0ln89t5</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_193lta7</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_09xpr6w">
       <bpmn:incoming>SequenceFlow_0uc8e7o</bpmn:incoming>
     </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1hw3vec" sourceRef="PaymentService" targetRef="Task_0bw965o" />
-    <bpmn:receiveTask id="PaymentService" name="Payment service" messageRef="Message_1axcnmi">
-      <bpmn:incoming>SequenceFlow_193lta7</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1hw3vec</bpmn:outgoing>
-    </bpmn:receiveTask>
     <bpmn:sequenceFlow id="SequenceFlow_0uc8e7o" sourceRef="Task_0bw965o" targetRef="IntermediateThrowEvent_09xpr6w" />
     <bpmn:serviceTask id="Task_0bw965o" name="Stop" camunda:type="external" camunda:topic="Stop">
-      <bpmn:incoming>SequenceFlow_1hw3vec</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0fe5onv</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0wwbztq</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0uc8e7o</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0zfb5wv" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_0ewe5sh" />
+    <bpmn:eventBasedGateway id="ExclusiveGateway_0ewe5sh">
+      <bpmn:incoming>SequenceFlow_0zfb5wv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14jsix5</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_11773ss</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0l80ma1" name="VIPShop">
+      <bpmn:incoming>SequenceFlow_14jsix5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1o5n880</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0y6wdvo" messageRef="Message_0qv87p3" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_14jsix5" sourceRef="ExclusiveGateway_0ewe5sh" targetRef="IntermediateCatchEvent_0l80ma1" />
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_027vvaf" name="NormalShop">
+      <bpmn:incoming>SequenceFlow_11773ss</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0m2kp6w</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0cmq297" messageRef="Message_0dm8ym8" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_11773ss" sourceRef="ExclusiveGateway_0ewe5sh" targetRef="IntermediateCatchEvent_027vvaf" />
+    <bpmn:sequenceFlow id="SequenceFlow_1c20z78" sourceRef="PaymentServiceId" targetRef="EndEvent_17aa2hz" />
+    <bpmn:intermediateCatchEvent id="PaymentServiceId" name="PaymentService">
+      <bpmn:incoming>SequenceFlow_1o5n880</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0m2kp6w</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1c20z78</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_011rn60" messageRef="Message_1axcnmi" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1o5n880" sourceRef="IntermediateCatchEvent_0l80ma1" targetRef="PaymentServiceId" />
+    <bpmn:sequenceFlow id="SequenceFlow_0m2kp6w" sourceRef="IntermediateCatchEvent_027vvaf" targetRef="PaymentServiceId" />
+    <bpmn:exclusiveGateway id="IsPaymentAcceptedId">
+      <bpmn:outgoing>SequenceFlow_0wh0z1z</bpmn:outgoing>
+      <bpmn:outgoing>AcceptedPaymentFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_06yvzpj" name="AcceptedPAyment">
+      <bpmn:incoming>AcceptedPaymentFlow</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0wwbztq</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_16wml5v" messageRef="Message_0z1lr05" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_03wxsyi" name="RefusedPayment">
+      <bpmn:incoming>SequenceFlow_0wh0z1z</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fe5onv</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0y2a7hb" messageRef="Message_1cdt9se" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0fe5onv" sourceRef="IntermediateThrowEvent_03wxsyi" targetRef="Task_0bw965o" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wwbztq" sourceRef="IntermediateThrowEvent_06yvzpj" targetRef="Task_0bw965o" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wh0z1z" sourceRef="IsPaymentAcceptedId" targetRef="IntermediateThrowEvent_03wxsyi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">accepted == false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="AcceptedPaymentFlow" sourceRef="IsPaymentAcceptedId" targetRef="IntermediateThrowEvent_06yvzpj">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">accepted == true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_17aa2hz">
+      <bpmn:incoming>SequenceFlow_1c20z78</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="Message_1axcnmi" name="PayServiceMessage" />
+  <bpmn:message id="Message_0qv87p3" name="EndShopMessage" />
+  <bpmn:message id="Message_0dm8ym8" name="EndNormalShop" />
+  <bpmn:message id="Message_0z1lr05" name="AcceptedPaymentMessage" />
+  <bpmn:message id="Message_1cdt9se" name="RefusedPaymentMessage" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SimpleShopTest">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="152" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0ln89t5_di" bpmnElement="SequenceFlow_0ln89t5">
-        <di:waypoint x="188" y="120" />
-        <di:waypoint x="340" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_193lta7_di" bpmnElement="SequenceFlow_193lta7">
-        <di:waypoint x="440" y="120" />
-        <di:waypoint x="510" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0i34ryg_di" bpmnElement="Task_178vbk7">
-        <dc:Bounds x="340" y="80" width="100" height="80" />
+        <dc:Bounds x="152" y="172" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="IntermediateThrowEvent_09xpr6w_di" bpmnElement="IntermediateThrowEvent_09xpr6w">
-        <dc:Bounds x="802" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1hw3vec_di" bpmnElement="SequenceFlow_1hw3vec">
-        <di:waypoint x="610" y="120" />
-        <di:waypoint x="650" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ReceiveTask_10e7x8u_di" bpmnElement="PaymentService">
-        <dc:Bounds x="510" y="80" width="100" height="80" />
+        <dc:Bounds x="1062" y="172" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0uc8e7o_di" bpmnElement="SequenceFlow_0uc8e7o">
-        <di:waypoint x="750" y="120" />
-        <di:waypoint x="802" y="120" />
+        <di:waypoint x="990" y="190" />
+        <di:waypoint x="1062" y="190" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0byq8xk_di" bpmnElement="Task_0bw965o">
-        <dc:Bounds x="650" y="80" width="100" height="80" />
+        <dc:Bounds x="890" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zfb5wv_di" bpmnElement="SequenceFlow_0zfb5wv">
+        <di:waypoint x="188" y="190" />
+        <di:waypoint x="224" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EventBasedGateway_0etidbd_di" bpmnElement="ExclusiveGateway_0ewe5sh">
+        <dc:Bounds x="224" y="165" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0l80ma1_di" bpmnElement="IntermediateCatchEvent_0l80ma1">
+        <dc:Bounds x="352" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="349" y="155" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_14jsix5_di" bpmnElement="SequenceFlow_14jsix5">
+        <di:waypoint x="249" y="165" />
+        <di:waypoint x="249" y="130" />
+        <di:waypoint x="352" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_027vvaf_di" bpmnElement="IntermediateCatchEvent_027vvaf">
+        <dc:Bounds x="352" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="340" y="275" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11773ss_di" bpmnElement="SequenceFlow_11773ss">
+        <di:waypoint x="249" y="215" />
+        <di:waypoint x="249" y="250" />
+        <di:waypoint x="352" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1c20z78_di" bpmnElement="SequenceFlow_1c20z78">
+        <di:waypoint x="588" y="190" />
+        <di:waypoint x="612" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0rh43m9_di" bpmnElement="PaymentServiceId">
+        <dc:Bounds x="552" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="530" y="215" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1o5n880_di" bpmnElement="SequenceFlow_1o5n880">
+        <di:waypoint x="388" y="130" />
+        <di:waypoint x="510" y="130" />
+        <di:waypoint x="510" y="190" />
+        <di:waypoint x="552" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0m2kp6w_di" bpmnElement="SequenceFlow_0m2kp6w">
+        <di:waypoint x="388" y="250" />
+        <di:waypoint x="510" y="250" />
+        <di:waypoint x="510" y="190" />
+        <di:waypoint x="552" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0yurz5x_di" bpmnElement="IsPaymentAcceptedId" isMarkerVisible="true">
+        <dc:Bounds x="695" y="165" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="697" y="180" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0sn6ims_di" bpmnElement="IntermediateThrowEvent_06yvzpj">
+        <dc:Bounds x="732" y="72" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="705" y="48" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1jl895r_di" bpmnElement="IntermediateThrowEvent_03wxsyi">
+        <dc:Bounds x="732" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="707" y="295" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fe5onv_di" bpmnElement="SequenceFlow_0fe5onv">
+        <di:waypoint x="768" y="270" />
+        <di:waypoint x="854" y="270" />
+        <di:waypoint x="854" y="190" />
+        <di:waypoint x="890" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wwbztq_di" bpmnElement="SequenceFlow_0wwbztq">
+        <di:waypoint x="768" y="90" />
+        <di:waypoint x="854" y="90" />
+        <di:waypoint x="854" y="190" />
+        <di:waypoint x="890" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wh0z1z_di" bpmnElement="SequenceFlow_0wh0z1z">
+        <di:waypoint x="720" y="215" />
+        <di:waypoint x="720" y="234" />
+        <di:waypoint x="750" y="234" />
+        <di:waypoint x="750" y="252" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1mkx5ni_di" bpmnElement="AcceptedPaymentFlow">
+        <di:waypoint x="720" y="165" />
+        <di:waypoint x="720" y="137" />
+        <di:waypoint x="750" y="137" />
+        <di:waypoint x="750" y="108" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_17aa2hz_di" bpmnElement="EndEvent_17aa2hz">
+        <dc:Bounds x="612" y="172" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

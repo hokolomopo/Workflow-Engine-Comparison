@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 public class RefusedPaymentService {
     private Logger log = LoggerFactory.getLogger(RefusedPaymentService.class);
 
-
     @Autowired
     private JmsTemplate jmsTemplate;
 

@@ -10,6 +10,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class PaymentService {
 
     @Autowired
     private JmsTemplate jmsTemplate;
+
+    @Value("${payment.queue.output}")
+    String outputQueue;
 
     @JmsListener(destination = "PaymentService")
     public void receiveMessage(BillingInfo info) {
@@ -62,23 +66,11 @@ public class PaymentService {
 
         Map<String, Object> variables = new ObjectMapper().convertValue(info, Map.class);
 
-
-        ProcessInstance pi = runtimeService.createProcessInstanceQuery()
-                .processDefinitionKey("SimpleShopTest")
-                .variableValueEquals("clientName", info.getClientName())
-                .singleResult();;
-
-        EventSubscription subscription = runtimeService.createEventSubscriptionQuery()
-                .processInstanceId(pi.getId()).eventType("message").singleResult();
-
-        runtimeService.messageEventReceived(subscription.getEventName(), subscription.getExecutionId(), variables);
-
-        // correlate the message
-//        MessageCorrelationResult result = runtimeService.createMessageCorrelation("PayServiceMessage")
-//                .processInstanceVariableEquals("clientName", info.getClientName())
-//                .setVariables(variables)
-//                .correlateWithResult();
-
         jmsTemplate.convertAndSend(outputQueue, info);
+        MessageCorrelationResult result = runtimeService.createMessageCorrelation("PayServiceMessage")
+                .processInstanceVariableEquals("clientName", variables.get("clientName"))
+                .setVariables(variables)
+                .correlateWithResult();
+
     }
 }
