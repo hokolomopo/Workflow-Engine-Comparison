@@ -38,7 +38,7 @@ public class PaymentService {
         confirmBill(info);
     }
 
-    private void processBill(BillingInfo info){
+    public void processBill(BillingInfo info){
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
         int targetStringLength = 10;
@@ -57,20 +57,5 @@ public class PaymentService {
     }
 
     private void confirmBill(BillingInfo info){
-        String outputQueue;
-
-        if(info.isAccepted())
-            outputQueue = "AcceptedPayment";
-        else
-            outputQueue = "RefusedPayment";
-
-        Map<String, Object> variables = new ObjectMapper().convertValue(info, Map.class);
-
-        jmsTemplate.convertAndSend(outputQueue, info);
-        MessageCorrelationResult result = runtimeService.createMessageCorrelation("PayServiceMessage")
-                .processInstanceVariableEquals("clientName", variables.get("clientName"))
-                .setVariables(variables)
-                .correlateWithResult();
-
     }
 }

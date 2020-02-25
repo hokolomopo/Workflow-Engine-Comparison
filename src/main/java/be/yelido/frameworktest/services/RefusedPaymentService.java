@@ -20,5 +20,4 @@ public class RefusedPaymentService {
         log.info("Refused payment: " + info);
     }
 
-
 }
