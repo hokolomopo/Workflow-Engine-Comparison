@@ -29,7 +29,7 @@ public class VIPShop {
         sendOrderToPay(order);
     }
 
-    private void processOrder(Order order){
+    public void processOrder(Order order){
         Random r = new Random();
         order.setPrice(r.nextInt());
     }

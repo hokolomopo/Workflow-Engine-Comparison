@@ -24,7 +24,7 @@ public class PaymentService {
         confirmBill(info);
     }
 
-    private void processBill(BillingInfo info){
+    public void processBill(BillingInfo info){
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
         int targetStringLength = 10;
