@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.value.ObjectValue;
@@ -25,6 +26,9 @@ public class WebRouter {
     @Autowired
     private RuntimeService runtimeService;
 
+    @Autowired
+    private HistoryService historyService;
+
     @Value("${input.queue}")
     String inputQueue;
 
@@ -33,9 +37,22 @@ public class WebRouter {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @GetMapping("/order")
-    Order home() {
-        return new Order("Jean", "vip", "book", 10);
+    @GetMapping("/history")
+    String history() {
+        try {
+//            System.out.println(historyService.createHistoricVariableInstanceQuery().list().size());
+            System.out.println(historyService.createNativeHistoricProcessInstanceQuery().list().size());
+
+            List<HistoricProcessInstance> l = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("SimpleShopTest").list();
+            return Integer.toString(l.size());
+        }catch (Exception e){
+            return e.getMessage();
+        }
+    }
+
+    @GetMapping("/instances")
+    String instances() {
+        return Integer.toString(runtimeService.createProcessInstanceQuery().list().size());
     }
 
     @PostMapping("/order")
