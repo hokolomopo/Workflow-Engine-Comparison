@@ -1,6 +1,8 @@
 package be.yelido.frameworktest.routes;
 
 import be.yelido.frameworktest.objects.Order;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class WebRouter {
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     @Value("${input.queue}")
     String inputQueue;
@@ -27,6 +32,7 @@ public class WebRouter {
     @PostMapping("/order")
     void orderProduct(@RequestBody Order order){
         logger.info("Received /order message");
-        jmsTemplate.convertAndSend(inputQueue, order);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("myProcess");
+        runtimeService.instance
     }
 }
