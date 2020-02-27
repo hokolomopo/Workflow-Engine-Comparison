@@ -16,6 +16,6 @@ public class PaymentAcceptedTask implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) {
         log.info("PaymentAcceptedTask");
-        throw new ActivitiException("Intended error for testing purposes");
+//        throw new ActivitiException("Intended error for testing purposes");
     }
 }

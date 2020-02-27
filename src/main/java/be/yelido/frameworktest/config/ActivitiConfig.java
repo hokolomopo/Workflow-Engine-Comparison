@@ -1,6 +1,10 @@
 package be.yelido.frameworktest.config;
 
 import be.yelido.frameworktest.javadelegates.*;
+import org.activiti.engine.ProcessEngineConfiguration;
+import org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration;
+import org.activiti.spring.ProcessEngineFactoryBean;
+import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

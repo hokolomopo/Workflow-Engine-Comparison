@@ -3,6 +3,8 @@ package be.yelido.frameworktest.routes;
 import be.yelido.frameworktest.objects.Order;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.ProcessEngineConfiguration;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -19,6 +21,8 @@ import java.util.Map;
 @RestController
 public class WebRouter {
 
+    String testId;
+
     @Autowired
     private RuntimeService runtimeService;
 
@@ -33,9 +37,13 @@ public class WebRouter {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @GetMapping("/")
+    @GetMapping("/instances")
     String home() {
         try {
+            ProcessInstance l2 = runtimeService.createProcessInstanceQuery().processInstanceId(testId).singleResult();
+            System.out.println(l2 != null);
+
+            System.out.println();
             List<ProcessInstance> l = runtimeService.createProcessInstanceQuery().list();
             return Integer.toString(l.size());
         }catch (Exception e){
@@ -51,8 +59,9 @@ public class WebRouter {
 
             HistoricProcessInstance why = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("SimpleShopTest").singleResult();
 
-            List<HistoricProcessInstance> l = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("SimpleShopTest").list();
-            return Integer.toString(l.size());
+            HistoricProcessInstance l = historyService.createHistoricProcessInstanceQuery().processInstanceId
+                    (testId).singleResult();
+            return Boolean.toString((l != null));
         }catch (Exception e){
             return e.getMessage();
         }
@@ -64,6 +73,12 @@ public class WebRouter {
         ObjectMapper oMapper = new ObjectMapper();
         Map<String, Object> variables = oMapper.convertValue(order, Map.class);
 
-        runtimeService.startProcessInstanceByKey("SimpleShopTest", variables);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("SimpleShopTest", variables);
+        testId = instance.getId();
     }
+
+//    @GetMapping("/test")
+//    String test(@Autowired ProcessEngineConfiguration processEngineConfiguration){
+//        return processEngineConfiguration.getHistory();
+//    }
 }
