@@ -2,10 +2,7 @@ package be.yelido.frameworktest.routes;
 
 import be.yelido.frameworktest.objects.Order;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.RuntimeService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -28,6 +25,9 @@ public class WebRouter {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private ProcessEngine processEngine;
 
     @Value("${input.queue}")
     String inputQueue;
@@ -54,14 +54,9 @@ public class WebRouter {
     @GetMapping("/history")
     String history() {
         try {
-//            System.out.println(historyService.createHistoricVariableInstanceQuery().list().size());
-            System.out.println(historyService.createNativeHistoricProcessInstanceQuery().list().size());
+            System.out.println(processEngine.getProcessEngineConfiguration().getHistory());
 
-            HistoricProcessInstance why = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("SimpleShopTest").singleResult();
-
-            HistoricProcessInstance l = historyService.createHistoricProcessInstanceQuery().processInstanceId
-                    (testId).singleResult();
-            return Boolean.toString((l != null));
+            return Integer.toString(historyService.createHistoricProcessInstanceQuery().list().size());
         }catch (Exception e){
             return e.getMessage();
         }

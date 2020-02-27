@@ -17,11 +17,11 @@
     <intermediateThrowEvent id="IntermediateThrowEvent_0s2olxs"></intermediateThrowEvent>
     <sequenceFlow id="SequenceFlow_1o4tg12" sourceRef="Task_089kr4a" targetRef="IntermediateThrowEvent_0s2olxs"></sequenceFlow>
     <sequenceFlow id="SequenceFlow_19uheit" sourceRef="Task_08ndssk" targetRef="IntermediateThrowEvent_0s2olxs"></sequenceFlow>
-    <serviceTask id="Task_0jb3p1w" name="NormalShop" activiti:async="true" activiti:delegateExpression="${normalShopTask}"></serviceTask>
-    <serviceTask id="Task_0ra694g" name="VipShop" activiti:async="true" activiti:delegateExpression="${vipShopTask}"></serviceTask>
-    <serviceTask id="Task_1mf006h" name="PaymentService" activiti:async="true" activiti:delegateExpression="${paymentServiceTask}"></serviceTask>
-    <serviceTask id="Task_08ndssk" name="RefusedPayment" activiti:async="true" activiti:delegateExpression="${paymentRefusedTask}"></serviceTask>
-    <serviceTask id="Task_089kr4a" name="AcceptedPAyment" activiti:async="true" activiti:delegateExpression="${paymentAcceptedTask}"></serviceTask>
+    <serviceTask id="Task_0jb3p1w" name="NormalShop" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${normalShopTask}"></serviceTask>
+    <serviceTask id="Task_0ra694g" name="VipShop" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${vipShopTask}"></serviceTask>
+    <serviceTask id="Task_1mf006h" name="PaymentService" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${paymentServiceTask}"></serviceTask>
+    <serviceTask id="Task_08ndssk" name="RefusedPayment" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${paymentRefusedTask}"></serviceTask>
+    <serviceTask id="Task_089kr4a" name="AcceptedPAyment" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${paymentAcceptedTask}"></serviceTask>
     <sequenceFlow id="flow2" sourceRef="ExclusiveGateway_0638bf6" targetRef="Task_0ra694g">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${clientType == "vip"}]]></conditionExpression>
     </sequenceFlow>
