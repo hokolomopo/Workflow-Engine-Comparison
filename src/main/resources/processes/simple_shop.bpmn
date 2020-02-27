@@ -28,6 +28,9 @@
     <sequenceFlow id="flow3" sourceRef="ExclusiveGateway_0tnss2a" targetRef="Task_08ndssk">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${accepted == false}]]></conditionExpression>
     </sequenceFlow>
+    <boundaryEvent id="boundarysignal1" name="Signal" attachedToRef="Task_08ndssk" cancelActivity="true">
+      <signalEventDefinition></signalEventDefinition>
+    </boundaryEvent>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_SimpleShopTest">
     <bpmndi:BPMNPlane bpmnElement="SimpleShopTest" id="BPMNPlane_SimpleShopTest">
@@ -54,6 +57,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Task_08ndssk" id="BPMNShape_Task_08ndssk">
         <omgdc:Bounds height="80.0" width="100.0" x="670.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="boundarysignal1" id="BPMNShape_boundarysignal1">
+        <omgdc:Bounds height="30.0" width="30.0" x="680.0" y="240.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Task_089kr4a" id="BPMNShape_Task_089kr4a">
         <omgdc:Bounds height="80.0" width="100.0" x="670.0" y="10.0"></omgdc:Bounds>

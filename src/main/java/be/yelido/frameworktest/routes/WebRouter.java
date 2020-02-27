@@ -55,7 +55,6 @@ public class WebRouter {
     String history() {
         try {
             System.out.println(processEngine.getProcessEngineConfiguration().getHistory());
-
             return Integer.toString(historyService.createHistoricProcessInstanceQuery().list().size());
         }catch (Exception e){
             return e.getMessage();
@@ -72,8 +71,4 @@ public class WebRouter {
         testId = instance.getId();
     }
 
-//    @GetMapping("/test")
-//    String test(@Autowired ProcessEngineConfiguration processEngineConfiguration){
-//        return processEngineConfiguration.getHistory();
-//    }
 }
