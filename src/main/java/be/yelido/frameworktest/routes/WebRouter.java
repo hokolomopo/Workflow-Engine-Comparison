@@ -1,6 +1,10 @@
 package be.yelido.frameworktest.routes;
 
 import be.yelido.frameworktest.objects.Order;
+import org.jbpm.services.api.DeploymentService;
+import org.jbpm.services.api.ProcessService;
+import org.jbpm.services.api.model.DeployedUnit;
+import org.jbpm.services.api.model.DeploymentUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +12,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 @RestController
 public class WebRouter {
+    @Autowired
+    private ProcessService processService;
+
+    @Autowired
+    private DeploymentService deploymentService;
 
     @Value("${input.queue}")
     String inputQueue;
@@ -21,12 +32,15 @@ public class WebRouter {
 
     @GetMapping("/")
     Order home() {
+        System.out.println(deploymentService.getDeployedUnits().size());
         return new Order("Jean", "vip", "book", 10);
     }
 
     @PostMapping("/order")
     void orderProduct(@RequestBody Order order){
         logger.info("Received /order message");
-        jmsTemplate.convertAndSend(inputQueue, order);
+        DeployedUnit deployedUnit = (DeployedUnit)deploymentService.getDeployedUnits().toArray()[0];
+        System.out.println(deployedUnit.getDeploymentUnit().getIdentifier());
+        Long id = processService.startProcess(deployedUnit.getDeploymentUnit().getIdentifier(), "test");
     }
 }
